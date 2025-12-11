@@ -27,6 +27,7 @@ class UIListScreen(UIScreen):
     
     def deinit(self):
         pass
+
     def render(self):
         list = self.get_list_for_render()
         unit = 6

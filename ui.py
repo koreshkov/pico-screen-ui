@@ -1,4 +1,3 @@
-"""Main UI module for Pico Screen UI application."""
 from picographics import PicoGraphics, DISPLAY_PICO_DISPLAY_2, PEN_P4  # type: ignore
 import time
 from machine import Pin
@@ -171,19 +170,14 @@ class UI:
     def on_color_select(self, value):
         self.palette.primary = value
         self.palette.secondary = 1 if value == 0 else 0
+
+def init_ui() -> UI:
+    ui = UI(display, palette)
+    return ui
         
 # Button setup
 
 def create_button_handler(pin_number, handler_func):
-    """Create a debounced button handler.
-    
-    Args:
-        pin_number: GPIO pin number
-        handler_func: Function to call on button press
-    
-    Returns:
-        Configured Pin object
-    """
     btn = Pin(pin_number, Pin.IN, Pin.PULL_UP)
     
     def handler(pin):
@@ -195,11 +189,14 @@ def create_button_handler(pin_number, handler_func):
     btn.irq(handler, Pin.IRQ_FALLING)
     return btn
 
-
-myUI = UI(display, palette)
+def init_ui_buttons(ui_instance: UI):
+    create_button_handler(12, ui_instance.btn_a_handler)
+    create_button_handler(13, ui_instance.btn_b_handler)
+    create_button_handler(14, ui_instance.btn_x_handler)
+    create_button_handler(15, ui_instance.btn_y_handler)
 
 # Initialize button interrupts
-btnA = create_button_handler(12, myUI.btn_a_handler)
-btnB = create_button_handler(13, myUI.btn_b_handler)
-btnX = create_button_handler(14, myUI.btn_x_handler)
-btnY = create_button_handler(15, myUI.btn_y_handler)
+# btnA = create_button_handler(12, myUI.btn_a_handler)
+# btnB = create_button_handler(13, myUI.btn_b_handler)
+# btnX = create_button_handler(14, myUI.btn_x_handler)
+# btnY = create_button_handler(15, myUI.btn_y_handler)

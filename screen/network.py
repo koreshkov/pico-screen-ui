@@ -1,16 +1,14 @@
 """Network connection details screen."""
 import network
 from machine import Timer
+from screen.base import UIScreen
 
 
-class UINetworkScreen:
+class UINetworkScreen(UIScreen):
     """Screen displaying network connection details."""
     
     def __init__(self, name, ui):
-        self.name = name
-        self.ui = ui
-        self.display = ui.display
-        self.palette = ui.palette
+        super().__init__(name, ui)
         self.rtc_timer = None
     
     def init(self):
@@ -22,11 +20,6 @@ class UINetworkScreen:
         """Called when screen becomes inactive."""
         if self.rtc_timer:
             self.rtc_timer.deinit()
-    
-    def clear(self):
-        """Clear the display with secondary color."""
-        self.display.set_pen(self.palette.secondary)
-        self.display.clear()
     
     def get_network_info(self):
         """Get network connection details."""
@@ -122,13 +115,8 @@ class UINetworkScreen:
             self.display.text(value, value_x, y_pos, 320, 2)
             y_pos += line_height
         
-        # Back button label
-        back_text = 'BACK'
-        back_width = self.display.measure_text(back_text, 2)
-        self.display.set_pen(self.palette.primary)
-        self.display.rectangle(320 - back_width - 12, 0, back_width + 12, 24)
-        self.display.set_pen(self.palette.secondary)
-        self.display.text(back_text, 320 - back_width - 6, 6, 320, 2)
+        # Render labels
+        self.render_labels([None, None, 'BACK', None])
         
         self.display.update()
     

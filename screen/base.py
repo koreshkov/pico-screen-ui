@@ -1,12 +1,7 @@
-"""UI Screen classes for different application views."""
-
-
-
-# Generic screen
+# Base screen
 
 class UIScreen:
-    """Base class for all UI screens."""
-    
+
     def __init__(self, name, ui):
         self.name = name
         self.ui = ui
@@ -14,26 +9,41 @@ class UIScreen:
         self.palette = ui.palette
     
     def init(self):
-        """Called when screen becomes active."""
         pass
     
     def deinit(self):
-        """Called when screen becomes inactive."""
         pass
     
     def clear(self):
-        """Clear the display with secondary color."""
         self.display.set_pen(self.palette.secondary)
         self.display.clear()
     
     def update(self):
-        """Update screen state - called continuously by main loop."""
         pass
     
-    def render(self):
-        """Render the screen content."""
+    def render(self, tim=None):
         pass
     
+    def render_labels(self, labels: list):
+        positions = [
+            (True, True),      # A button (top-left)
+            (True, False),     # B button (bottom-left)
+            (False, True),     # X button (top-right)
+            (False, False)     # Y button (bottom-right)
+        ]
+        
+        for i, (is_left, is_top) in enumerate(positions):
+            if i < len(labels) and labels[i]:
+                text = labels[i]
+                width = self.display.measure_text(text, 2)
+                x = 0 if is_left else self.ui.width - width - 12
+                y = 0 if is_top else self.ui.height - 24
+                
+                self.display.set_pen(self.palette.primary)
+                self.display.rectangle(x, y, width + 12, 24)
+                self.display.set_pen(self.palette.secondary)
+                self.display.text(text, x + 6, y + 6, self.ui.width, 2)
+
     def btn_a_handler(self):
         print(f'{self.name}: A')
     
@@ -45,21 +55,3 @@ class UIScreen:
     
     def btn_y_handler(self):
         print(f'{self.name}: Y')
-    
-# Home screen
-
-
-
-# List item
-
-
-# Settings screen
-
-
-
-# Select list
-
-
-
-# Files screen
-

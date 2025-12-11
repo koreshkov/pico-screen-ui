@@ -3,7 +3,10 @@ Main entry point for Pico Screen UI application.
 Initializes WiFi connection and starts the UI.
 """
 import wifi
-from ui import myUI
+from ui import init_ui, init_ui_buttons
+
+pico_ui = init_ui()
+init_ui_buttons(pico_ui)
 
 # Initialize WiFi connection
 wlan = wifi.connect()
@@ -12,4 +15,4 @@ wlan = wifi.connect()
 # This allows screens like Pong to animate while still
 # responding to button interrupts
 while True:
-    myUI.update()
+    pico_ui.update()
